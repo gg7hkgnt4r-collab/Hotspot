@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotspot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #0f0f0f;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        header.scrolled {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 38px;
+            color: #d4a373;
+        }
+        
+        /* Desktop Menu */
+        .desktop-menu ul {
+            list-style: none;
+            display: flex;
+        }
+        .desktop-menu ul li {
+            margin-left: 30px;
+        }
+        .desktop-menu ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        .desktop-menu ul li a:hover {
+            color: #d4a373;
+        }
+        
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            font-size: 30px;
+            color: #fff;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            max-width: 300px;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.95);
+            padding: 100px 30px 30px;
+            transition: right 0.4s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .mobile-menu.active {
+            right: 0;
+        }
+        .mobile-menu ul {
+            list-style: none;
+            width: 100%;
+            text-align: center;
+        }
+        .mobile-menu ul li {
+            margin: 20px 0;
+        }
+        .mobile-menu ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 22px;
+            transition: color 0.3s;
+        }
+        .mobile-menu ul li a:hover {
+            color: #d4a373;
+        }
+        
+        /* Hero */
+        .hero {
+            height: 100vh;
+            background-color: #0a0a0a;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 100px;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1;
+        }
+        .hero > * {
+            position: relative;
+            z-index: 2;
+        }
+        .hero-content {
+            max-width: 600px;
+            z-index: 2;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 70px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .hero h1 span {
+            color: #d4a373;
+        }
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        /* Floating Food Images */
+        .food-images {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .food-img {
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            opacity: 0;
+            animation: floatIn 2s ease-out forwards, gentleFloat 6s ease-in-out infinite 2s;
+        }
+        .food1 { width: 350px; height: 350px; top: 150px; right: 200px; animation-delay: 0.5s; }
+        .food2 { width: 280px; height: 280px; top: 400px; right: 50px; animation-delay: 1s; }
+        .food3 { width: 400px; height: 400px; bottom: 100px; right: 300px; animation-delay: 1.5s; }
+        
+        @keyframes floatIn {
+            from { transform: translateY(-100vh) rotate(0deg); opacity: 0; }
+            to { transform: translateY(0) rotate(360deg); opacity: 1; }
+        }
+        
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Leaves */
+        .leaf {
+            position: absolute;
+            opacity: 0;
+            animation: leafFloatIn 3s ease-out forwards, gentleFloat 8s ease-in-out infinite 3s;
+            z-index: 1;
+        }
+        .leaf1 { width: 80px; top: -100px; left: 10%; animation-delay: 0.8s; }
+        .leaf2 { width: 100px; top: -100px; right: 20%; animation-delay: 1.8s; }
+        .leaf3 { width: 70px; top: -100px; left: 20%; animation-delay: 2.3s; }
+        
+        @keyframes leafFloatIn {
+            from { transform: translateY(-100vh) rotate(0deg); opacity: 0; }
+            to { transform: translateY(0) rotate(360deg); opacity: 0.4; }
+        }
+        
+        /* Why Choose Us */
+        .why-choose {
+            padding: 120px 50px;
+            background-color: #0a0a0a;
+            text-align: center;
+        }
+        .why-title {
+            font-size: 18px;
+            color: #d4a373;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        .why-title::before, .why-title::after {
+            content: ''; position: absolute; top: 50%; width: 60px; height: 1px; background-color: #d4a373;
+        }
+        .why-title::before { left: -80px; }
+        .why-title::after { right: -80px; }
+        .why-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 50px;
+            margin-bottom: 80px;
+        }
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            flex-wrap: wrap;
+        }
+        .feature {
+            max-width: 300px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+        .feature.visible { opacity: 1; transform: translateY(0); }
+        .feature img {
+            width: 120px; height: 120px; margin-bottom: 30px;
+            filter: brightness(0) saturate(100%) invert(67%) sepia(28%) saturate(800%) hue-rotate(330deg) brightness(90%) contrast(90%);
+        }
+        .feature h3 { font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 20px; }
+        .feature p { font-size: 16px; opacity: 0.8; line-height: 1.6; }
+        
+        /* About */
+        .about {
+            padding: 120px 50px;
+            background-color: #0f0f0f;
+        }
+        .about-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .about-content {
+            flex: 1;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 1s ease-out;
+        }
+        .about-content.visible { opacity: 1; transform: translateX(0); }
+        .about-image {
+            flex: 1;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 1s ease-out 0.3s;
+        }
+        .about-image.visible { opacity: 1; transform: translateX(0); }
+        .about-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+        .about-title {
+            font-size: 18px;
+            color: #d4a373;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        .about-title::before, .about-title::after {
+            content: ''; position: absolute; top: 50%; width: 60px; height: 1px; background-color: #d4a373;
+        }
+        .about-title::before { left: -80px; }
+        .about-title::after { right: -80px; }
+        .about-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 50px;
+            margin-bottom: 40px;
+        }
+        .about-text {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        
+        /* Menu */
+        .menu {
+            padding: 120px 50px;
+            background-color: #0a0a0a;
+            text-align: center;
+        }
+        .menu-header { margin-bottom: 80px; }
+        .menu-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 50px;
+            margin-bottom: 30px;
+        }
+        .menu-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+        .menu-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 80px;
+        }
+        .tab-btn {
+            padding: 12px 30px;
+            background: #111;
+            border: none;
+            color: #ccc;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 30px;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: #d4a373;
+            color: #000;
+        }
+        .menu-items-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .menu-item {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+        .menu-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .menu-item-image {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+        .menu-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .menu-item:hover .menu-item-image img {
+            transform: scale(1.1);
+        }
+        .menu-item-content h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .menu-item-price {
+            font-size: 28px;
+            color: #d4a373;
+            font-weight: bold;
+        }
+        
+        /* Contact */
+        .contact {
+            padding: 120px 50px;
+            background-color: #0a0a0a;
+            text-align: center;
+        }
+        .contact-title {
+            font-size: 18px;
+            color: #d4a373;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        .contact-title::before, .contact-title::after {
+            content: ''; position: absolute; top: 50%; width: 60px; height: 1px; background-color: #d4a373;
+        }
+        .contact-title::before { left: -80px; }
+        .contact-title::after { right: -80px; }
+        .contact-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 50px;
+            margin-bottom: 30px;
+        }
+        .contact-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto 80px;
+        }
+        .contact-container {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 50px;
+        }
+        .contact-item {
+            text-align: center;
+        }
+        .contact-item i {
+            font-size: 40px;
+            color: #d4a373;
+            margin-bottom: 20px;
+        }
+        .contact-item h4 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        .contact-item p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        .contact-form {
+            flex: 1;
+            min-width: 400px;
+            background: #111;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            background: #1a1a1a;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #d4a373;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+            background: #222;
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #888;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .btn {
+            padding: 18px;
+            background: transparent;
+            border: 2px solid #d4a373;
+            color: #d4a373;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 30px;
+            width: 100%;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .btn:hover {
+            background: #d4a373;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+        }
+        .map-container {
+            margin-top: 80px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            height: 400px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #000;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .footer-menu ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .footer-menu ul li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        .footer-menu ul li a:hover {
+            color: #d4a373;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hamburger { display: block; }
+            .desktop-menu { display: none; }
+        }
+        @media (max-width: 768px) {
+            header { padding: 20px; }
+            .hero { padding: 150px 20px 50px; flex-direction: column; text-align: center; }
+            .hero h1 { font-size: 50px; }
+            .food-images { position: relative; width: 100%; height: 50%; }
+            .food-img { position: relative; margin: 20px auto; }
+            .leaf { display: none; }
+            .menu, .why-choose, .about, .contact { padding: 80px 20px; }
+            .menu-title, .why-heading, .about-heading, .contact-heading { font-size: 40px; }
+            .menu-item-image { width: 200px; height: 200px; }
+            .features { flex-direction: column; align-items: center; gap: 50px; }
+            .about-container { flex-direction: column; }
+            .about-image { order: -1; margin-bottom: 40px; }
+            .contact-container { flex-direction: column; gap: 80px; }
+            .contact-form { padding: 30px; min-width: auto; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">HOTSPOT</div>
+        <div class="desktop-menu">
+            <ul>
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <h1>Where Hotspots <span>Meet Their Perfect</span> Match</h1>
+        </div>
+        <div class="food-images">
+            <img src="img/i1.png" alt="Dish 1" class="food-img food1">
+            <img src="img/i3.png" alt="Dish 2" class="food-img food2">
+            <img src="img/i2.png" alt="Dish 3" class="food-img food3">
+        </div>
+    </section>
+
+    <section class="why-choose">
+        <div class="why-title">WHY CHOOSE US</div>
+        <h2 class="why-heading">We Provide Elegant Service for People</h2>
+        <div class="features">
+            <div class="feature">
+                <img src="img/i4.svg" alt="Delicious Food">
+                <h3>Delicious Food</h3>
+                <p>Our dishes are full of fresh, bold flavors that you'll love.</p>
+            </div>
+            <div class="feature">
+                <img src="img/i5.svg" alt="Relaxing">
+                <h3>Relaxing</h3>
+                <p>Enjoy your meal in a cozy and welcoming for every occasion.</p>
+            </div>
+            <div class="feature">
+                <img src="img/i6.svg" alt="Friendly Service">
+                <h3>Friendly Service</h3>
+                <p>Dedicated to ensuring seamless service with available.</p>
+            </div>
+            <div class="feature">
+                <img src="img/i7.svg" alt="Fresh Ingredients">
+                <h3>Fresh Ingredients</h3>
+                <p>We use best freshest ingredients to make every dish perfect.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="about-container">
+            <div class="about-content">
+                <div class="about-title">ABOUT US</div>
+                <h2 class="about-heading">Crafting Unforgettable Dining Experiences</h2>
+                <p class="about-text">
+                    At Hotspots, we believe that great food is more than just a meal—it's an experience that brings people together.
+                    Our passion for bold flavors and exquisite presentation drives everything we do, from sourcing the freshest ingredients
+                    to creating dishes that delight the senses.
+                </p>
+                <p class="about-text">
+                    Founded with a vision to redefine fine dining, our restaurant combines elegant ambiance with warm hospitality,
+                    making every visit memorable. Whether you're celebrating a special occasion or simply indulging a Hotspot,
+                    we're here to make it perfect.
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="https://plus.unsplash.com/premium_photo-1661883237884-263e8de8869b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D" alt="Restaurant Interior">
+            </div>
+        </div>
+    </section>
+
+    <section class="menu" id="menu">
+        <div class="menu-header">
+            <h2 class="menu-title">Savor Every Meal, Every Moment</h2>
+            <p class="menu-subtitle">Discover our tailored dining services designed to match your day's rhythm. From energizing breakfasts to satisfying lunches, delightful snacks, and exquisite beverages.</p>
+            <div class="menu-tabs">
+                <button class="tab-btn active" data-tab="breakfast">BREAKFAST</button>
+                <button class="tab-btn" data-tab="lunch">LUNCH</button>
+                <button class="tab-btn" data-tab="snacks">SNACKS</button>
+                <button class="tab-btn" data-tab="beverage">BEVERAGE</button>
+            </div>
+        </div>
+        <div class="menu-items-container">
+            <!-- BREAKFAST -->
+            <div class="menu-item" data-category="breakfast">
+                <div class="menu-item-image"><img src="img/b1.jpg" alt="Plain Dosa"></div>
+                <div class="menu-item-content"><h4>Plain Dosa</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            <div class="menu-item" data-category="breakfast">
+                <div class="menu-item-image"><img src="img/b2.jpg" alt="Variety Dosa"></div>
+                <div class="menu-item-content"><h4>Variety Dosa</h4><div class="menu-item-price">₹35</div></div>
+            </div>
+            <div class="menu-item" data-category="breakfast">
+                <div class="menu-item-image"><img src="img/b3.jpg" alt="Roast"></div>
+                <div class="menu-item-content"><h4>Roast</h4><div class="menu-item-price">₹60</div></div>
+            </div>
+            <div class="menu-item" data-category="breakfast">
+                <div class="menu-item-image"><img src="img/b3.jpg" alt="Variety Roast"></div>
+                <div class="menu-item-content"><h4>Variety Roast</h4><div class="menu-item-price">₹70</div></div>
+            </div>
+            <div class="menu-item" data-category="breakfast">
+                <div class="menu-item-image"><img src="img/b4.jpg" alt="Poori"></div>
+                <div class="menu-item-content"><h4>Poori (2-pcs)</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            <div class="menu-item" data-category="breakfast">
+                <div class="menu-item-image"><img src="img/b5.jpg" alt="Pongal"></div>
+                <div class="menu-item-content"><h4>Pongal</h4><div class="menu-item-price">₹40</div></div>
+            </div>
+            <div class="menu-item" data-category="breakfast">
+                <div class="menu-item-image"><img src="img/b6.jpg" alt="Idly"></div>
+                <div class="menu-item-content"><h4>Idly (1-Set)</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            <div class="menu-item" data-category="breakfast">
+                <div class="menu-item-image"><img src="img/b7.jpg" alt="Sambar Idly"></div>
+                <div class="menu-item-content"><h4>Sambar Idly (2-pcs)</h4><div class="menu-item-price">₹40</div></div>
+            </div>
+            <div class="menu-item" data-category="breakfast">
+                <div class="menu-item-image"><img src="img/b8.jpg" alt="Wheat Rava Kichadi"></div>
+                <div class="menu-item-content"><h4>Wheat Rava Kichadi</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+           
+            
+            <!-- LUNCH -->
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l1.jpg" alt="Chapati"></div>
+                <div class="menu-item-content"><h4>Chapati (2-pcs)</h4><div class="menu-item-price">₹40</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l2.jpg" alt="Wheat Parota"></div>
+                <div class="menu-item-content"><h4>Wheat Parota (2-pcs)</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l3.jpg" alt="Veg Fried Rice"></div>
+                <div class="menu-item-content"><h4>Veg Fried Rice</h4><div class="menu-item-price">₹70</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l4.jpg" alt="Mushroom Fried Rice"></div>
+                <div class="menu-item-content"><h4>Mushroom Fried Rice</h4><div class="menu-item-price">₹90</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l5.jpg" alt="Babycorn Fried Rice"></div>
+                <div class="menu-item-content"><h4>Babycorn Fried Rice</h4><div class="menu-item-price">₹90</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l6.jpg" alt="Gobi Fried Rice"></div>
+                <div class="menu-item-content"><h4>Gobi Fried Rice</h4><div class="menu-item-price">₹90</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l7.jpg" alt="Curd Rice"></div>
+                <div class="menu-item-content"><h4>Curd Rice</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l8.jpg" alt="Sambar Rice"></div>
+                <div class="menu-item-content"><h4>Sambar Rice</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l9.jpg" alt="Gobi Chilli"></div>
+                <div class="menu-item-content"><h4>Gobi Chilli</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l11.jpg" alt="Gobi Manchurian"></div>
+                <div class="menu-item-content"><h4>Gobi Manchurian</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l12.jpg" alt="Paneer Fried Rice"></div>
+                <div class="menu-item-content"><h4>Paneer Fried Rice</h4><div class="menu-item-price">₹70</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l13.jpg" alt="Plain Noodles"></div>
+                <div class="menu-item-content"><h4>Plain Noodles</h4><div class="menu-item-price">₹70</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l14.jpg" alt="Veg Biriyani"></div>
+                <div class="menu-item-content"><h4>Veg Biriyani</h4><div class="menu-item-price">₹70</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l15.jpg" alt="Mushroom Biriyani"></div>
+                <div class="menu-item-content"><h4>Mushroom Biriyani</h4><div class="menu-item-price">₹80</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l16.jpg" alt="Mushroom Manchurian"></div>
+                <div class="menu-item-content"><h4>Mushroom Manchurian</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            <div class="menu-item" data-category="lunch">
+                <div class="menu-item-image"><img src="img/l17.jpg" alt="Paneer Tikka"></div>
+                <div class="menu-item-content"><h4>Paneer Tikka</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            
+            <!-- SNACKS -->
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s1.jpeg" alt="Cutlet"></div>
+                <div class="menu-item-content"><h4>Cutlet</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s2.jpg" alt="Samosa"></div>
+                <div class="menu-item-content"><h4>Samosa</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s4.jpg" alt="Bread Sandwich"></div>
+                <div class="menu-item-content"><h4>Bread Sandwich</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s5.jpg" alt="Puffs"></div>
+                <div class="menu-item-content"><h4>Puffs</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s6.jpg" alt="Donut"></div>
+                <div class="menu-item-content"><h4>Donut</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s7.jpg" alt="Cake"></div>
+                <div class="menu-item-content"><h4>Cake</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s8.jpg" alt="Brownie"></div>
+                <div class="menu-item-content"><h4>Brownie</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s9.jpg" alt="Thattuvadai set"></div>
+                <div class="menu-item-content"><h4>Thattuvadai set</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s10.jpg" alt="Thayir vadai"></div>
+                <div class="menu-item-content"><h4>Thayir vadai</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s11.jpg" alt="Fruit salad"></div>
+                <div class="menu-item-content"><h4>Fruit salad</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s12.jpg" alt="Bread chilli"></div>
+                <div class="menu-item-content"><h4>Bread chilli</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s13.jpg" alt="Biscuit"></div>
+                <div class="menu-item-content"><h4>Biscuit (1-plate)</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s14.jpg" alt="Vada pav"></div>
+                <div class="menu-item-content"><h4>Vada pav</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s15.jpg" alt="Bhaji"></div>
+                <div class="menu-item-content"><h4>Bhaji</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s16.jpg" alt="Bonda"></div>
+                <div class="menu-item-content"><h4>Bonda</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s17.jpg" alt="Chapatti Roll"></div>
+                <div class="menu-item-content"><h4>Chapatti Roll</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s18.jpg" alt="Panipuri"></div>
+                <div class="menu-item-content"><h4>Panipuri</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s19.jpg" alt="Masala sundal"></div>
+                <div class="menu-item-content"><h4>Masala sundal</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s20.jpg" alt="Sambar vadai"></div>
+                <div class="menu-item-content"><h4>Sambar vadai</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s21.jpg" alt="Ragi Pakkoda"></div>
+                <div class="menu-item-content"><h4>Ragi Pakkoda</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="snacks">
+                <div class="menu-item-image"><img src="img/s22.jpg" alt="Onion Pakkoda"></div>
+                <div class="menu-item-content"><h4>Onion Pakkoda</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            
+            <!-- BEVERAGE -->
+            <div class="menu-item" data-category="beverage">
+                <div class="menu-item-image"><img src="img/j1.jpg" alt="Fresh Juice"></div>
+                <div class="menu-item-content"><h4>Fresh Juice</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="beverage">
+                <div class="menu-item-image"><img src="img/j2.jpg" alt="Badam & Rose Milk"></div>
+                <div class="menu-item-content"><h4>Badam & Rose Milk</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="beverage">
+                <div class="menu-item-image"><img src="img/j3.jpg" alt="Milkshake"></div>
+                <div class="menu-item-content"><h4>Milkshake</h4><div class="menu-item-price">₹30</div></div>
+            </div>
+            <div class="menu-item" data-category="beverage">
+                <div class="menu-item-image"><img src="img/j4.jpg" alt="ABC Juice"></div>
+                <div class="menu-item-content"><h4>ABC Juice</h4><div class="menu-item-price">₹50</div></div>
+            </div>
+            <div class="menu-item" data-category="beverage">
+                <div class="menu-item-image"><img src="img/j5.jpg" alt="Tea"></div>
+                <div class="menu-item-content"><h4>Tea</h4><div class="menu-item-price">₹15</div></div>
+            </div>
+            <div class="menu-item" data-category="beverage">
+                <div class="menu-item-image"><img src="img/j5.jpg" alt="Coffee"></div>
+                <div class="menu-item-content"><h4>Coffee</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            <div class="menu-item" data-category="beverage">
+                <div class="menu-item-image"><img src="img/j6.jpg" alt="Horlicks"></div>
+                <div class="menu-item-content"><h4>Horlicks</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+            <div class="menu-item" data-category="beverage">
+                <div class="menu-item-image"><img src="img/j6.jpg" alt="Boost"></div>
+                <div class="menu-item-content"><h4>Boost</h4><div class="menu-item-price">₹20</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="contact-title">GET IN TOUCH</div>
+        <h2 class="contact-heading">We'd Love to Hear From You</h2>
+        <p class="contact-subtitle">Feel free to reach out for reservations, inquiries, or feedback. We're here to make your experience perfect!</p>
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>Location</h4>
+                    <p>Hotspot Canteen</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <h4>Phone</h4>
+                    <p>+91 6380704224</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <h4>Opening Hours</h4>
+                    <p>Mon - Fri: 9:00 AM - 4:00 PM<br>Saturday: 9:00 AM - 3:00 PM<br>Sunday: Closed</p>
+                </div>
+            </div>
+            <div class="contact-form">
+                <form id="whatsapp-form">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="subject" name="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" rows="6" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">SEND VIA WHATSAPP</button>
+                </form>
+            </div>
+        </div>
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps?q=,++638151&output=embed" loading="lazy" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-menu">
+            <ul>
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            document.querySelector('header').classList.toggle('scrolled', window.scrollY > 50);
+        });
+        
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+        });
+        
+        // Menu tabs
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const menuItems = document.querySelectorAll('.menu-item');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const cat = btn.dataset.tab;
+                menuItems.forEach(item => {
+                    item.style.display = (item.dataset.category === cat) ? 'block' : 'none';
+                });
+            });
+        });
+        
+        // Show Breakfast by default
+        window.addEventListener('load', () => {
+            menuItems.forEach(item => {
+                item.style.display = (item.dataset.category === 'breakfast') ? 'block' : 'none';
+            });
+        });
+        
+        // Feature animation on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.feature').forEach(f => observer.observe(f));
+        
+        // About section animation
+        const aboutObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelector('.about-content').classList.add('visible');
+                    document.querySelector('.about-image').classList.add('visible');
+                }
+            });
+        }, { threshold: 0.2 });
+        aboutObserver.observe(document.querySelector('.about-container'));
+        
+        // Menu items animation
+        const menuObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.menu-item').forEach((item, i) => {
+                        setTimeout(() => item.classList.add('visible'), i * 100);
+                    });
+                }
+            });
+        }, { threshold: 0.1 });
+        menuObs.observe(document.querySelector('.menu-items-container'));
+        
+        // WhatsApp form
+        document.getElementById('whatsapp-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            const message = document.getElementById('message').value.trim();
+            const phoneNumber = "916380704224";
+            const whatsappMessage = `Name: ${name}%0aSubject: ${subject}%0aMessage: ${message}`;
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${whatsappMessage}`;
+            window.open(whatsappURL, '_blank');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
